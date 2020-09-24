@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manish Ladkat Week 3 Assignment 6</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id ="title">
+            </div>
+            <div class="col-xs-12">
+                <label for="title">Author :</label>
+                <input type="text" name="author" id ="author">
+            </div>
+            <div class="col-xs-12">
+                <button type="button" onclick="sendPost()" class="btn btn-success">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col xs-12" id="list">
+
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        console.log("Heelo World!!")
+        function sendPost(){
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const req = {
+                title,
+                author
+            }
+            axios.post('http://localhost:3004/posts', req)
+            .then(function (response) {
+                console.log(response)
+                document.getElementById('title').value = "";
+                document.getElementById('author').value = "";
+                getPosts();
+            })
+            .catch(function (error){
+                console.log(error)
+            });
+        }
+
+        function getPosts(){
+            axios.get('http://localhost:3004/posts')
+            .then(function (response){
+                const list = document.getElementById('list');
+                if(response && response.data){
+                    console.log(response)
+                    list.innerHTML = '';
+                    list.style.textAlign = "center"
+                    response.data.forEach(post => {
+                        list.innerHTML += '<br>' + post.title + ' - ' + post.author;
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+
+        getPosts()
+
+    </script>
+
+</body>
+</html>
